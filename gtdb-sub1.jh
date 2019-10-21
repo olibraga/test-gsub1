@@ -1,0 +1,575 @@
+entity Alert {
+	id Long required,
+	version Long required,
+	dateCreated Long required,
+	recreated Integer required,
+	whoAcked String maxlength(255)
+}
+
+entity Asset {
+	id Long required,
+	version Long required,
+	dateCreated Long required,
+	disabled Boolean required,
+	/** Unique UUID key for API */
+	globalId String required maxlength(36),
+	lastUpdated Long required,
+	note String maxlength(255),
+	serial String required maxlength(255),
+	/** Asset name updated from asset hardware */
+	intrinsicName String maxlength(255),
+	tags String maxlength(255),
+	customerTags String maxlength(255)
+}
+
+entity AssetCustomerTag {
+	value String maxlength(255)
+}
+
+entity AssetCustomerTagLabel {
+	language String required maxlength(12),
+	label String required maxlength(64)
+}
+
+entity AssetCustomerTagType {
+	id Integer required,
+	tag String required maxlength(32),
+	type String maxlength(32),
+	description String maxlength(255),
+	label String required maxlength(64)
+}
+
+entity AssetTag {
+	parent String required maxlength(16),
+	tag String required maxlength(16),
+	label String required maxlength(32),
+	note String maxlength(255),
+	disabled Boolean required,
+	version Integer required,
+	whenCreated Long required,
+	whenUpdated Long required
+}
+
+entity Box {
+	id Long required,
+	version Long required,
+	uniqueId Long required,
+	boxType String required maxlength(16),
+	configuration TextBlob required,
+	dateCreated Long required,
+	disabled Boolean required,
+	/** Unique UUID key for API */
+	globalId String required maxlength(36),
+	keyMaterial TextBlob required,
+	lastUpdated Long required,
+	serial String required maxlength(255),
+	gtTags String maxlength(255)
+}
+
+entity Command {
+	id Long required,
+	whoCreated String required maxlength(64),
+	whenCreated Long required,
+	/** When sent to GTCM */
+	whenSent Long,
+	/** When acked by GTCM */
+	whenAcked Long,
+	payload TextBlob required,
+	/** Command tag when available */
+	tag Integer,
+	/** Do not send before */
+	whenToSend Long,
+	/** Do not send after */
+	whenExpires Long,
+	/** Recreate command every specified minutes */
+	repeatMinutes Integer,
+	/** Do not send */
+	canceled Boolean required,
+	prerequisiteType PrerequisiteType required,
+	/** Result from Command3Result */
+	result Integer,
+	/** When Command3Result received from GTCM */
+	whenResult Long,
+	version Long required
+}
+
+entity CommandReply {
+	id Long required,
+	payload TextBlob required,
+	replyType String required maxlength(255),
+	/** When sent to GTCM */
+	whenSent Long required,
+	/** When acked by GTCM */
+	whenReceived Long,
+	version Long required,
+	/** Result from Command3Result */
+	result Integer,
+	/** When Command3Result received from GTCM */
+	whenResult Long
+}
+
+entity CommandType {
+	id Long required,
+	typeNumber Integer required,
+	name String required maxlength(255),
+	defaultPayload TextBlob required,
+	description String required maxlength(255),
+	createGuiTemplate String required maxlength(32),
+	showGuiTemplate String required maxlength(32),
+	editGuiTemplate String required maxlength(32),
+	dateCreated Long required,
+	lastUpdated Long required,
+	version Long required,
+	globalId String required maxlength(36)
+}
+
+entity Customer {
+	id Long required,
+	version Long required,
+	adminIp String required maxlength(255),
+	adminPort Integer required,
+	daemonCompressedPort Integer required,
+	daemonIp String required maxlength(255),
+	daemonPort Integer required,
+	dateCreated Long required,
+	disabled Boolean required,
+	/** Unique UUID key for API */
+	globalId String required maxlength(36),
+	lastUpdated Long required,
+	name String required maxlength(255),
+	note String maxlength(255),
+	/** Short unique customer text key, e.g. ACME.US */
+	serial String required maxlength(255)
+}
+
+entity DaikinAlarms {
+	id Long required,
+	level Integer required,
+	levelName String required maxlength(64),
+	description String required maxlength(255)
+}
+
+entity DownloadFile {
+	id Long required,
+	/** Human readable name of file */
+	name String required maxlength(32),
+	/** File name to use in site default URL */
+	fileName String required maxlength(64),
+	/** File size in bytes */
+	fileSize Integer required,
+	/** File CRC32 */
+	fileChecksum Long required,
+	/** Destination on GTCM */
+	destination Integer required,
+	/** Overrides site default URL pattern */
+	url String maxlength(255),
+	/** Is still in development */
+	development Boolean required,
+	/** Is obsolete */
+	disabled Boolean required,
+	note String maxlength(255),
+	whenCreated Long required,
+	whenUpdated Long required,
+	optlock Long required
+}
+
+entity Event {
+	id Long required,
+	version Long required,
+	assetSerial String required maxlength(255),
+	boxSerial String required maxlength(255),
+	code String required maxlength(255),
+	created Long required,
+	severity String required maxlength(255),
+	text TextBlob required
+}
+
+entity EventType {
+	id Long required,
+	version Long required,
+	alert Boolean required,
+	code String required maxlength(20),
+	dateCreated Long required,
+	format String required maxlength(255),
+	forwardToGt Boolean required,
+	globalId String required maxlength(36),
+	lastUpdated Long required,
+	severity String required maxlength(255)
+}
+
+entity FirmwareVersion {
+	id Long required,
+	version Long required,
+	dateCreated Long required,
+	disabled Boolean required,
+	/** Is still in development */
+	development Boolean required,
+	file String required maxlength(255),
+	globalId String required maxlength(36),
+	lastUpdated Long required,
+	major Integer required,
+	minor Integer required,
+	name String required maxlength(255),
+	note String maxlength(255)
+}
+
+entity GtServer {
+	/** Short unique server key, e.g. GTTRIAL.EU */
+	id String required maxlength(16),
+	/** Short unique server name, e.g. GT Europe Trials */
+	name String required maxlength(64),
+	/** Server Boxer IP4 address, e.g. 12.34.56.78 */
+	boxerIp4 String required maxlength(64),
+	/** Server Boxer IP4 port, e.g. 6301 */
+	boxerPort4 Integer required,
+	/** Server Boxer IP6 address, e.g. 2001:db8::ff00:42:8329 */
+	boxerIp6 String maxlength(64),
+	/** Server Boxer IP6 port, e.g. 6301 */
+	boxerPort6 Integer,
+	/** Server DNS name, e.g. trial.eu.globetracker.com */
+	serverDns String required maxlength(64),
+	note String maxlength(255),
+	whenCreated Long required,
+	whenUpdated Long required,
+	whoUpdated String required maxlength(255),
+	optlock Long required
+}
+
+entity GtcmHome {
+	whenCreated Long required,
+	whenUpdated Long required,
+	whoUpdated String required maxlength(255),
+	optlock Long required
+}
+
+entity LatestLocation {
+
+}
+
+entity Notification {
+	id Long required,
+	whenCreated Long required,
+	priority Integer,
+	handled Boolean,
+	recipients String maxlength(255),
+	subject String required maxlength(1024),
+	body String required maxlength(255),
+	sender String maxlength(255),
+	siteHeader Boolean,
+	creator String required maxlength(255),
+	ownerId Long required
+}
+
+entity NotificationRecipient {
+	id Long required,
+	noteType String required maxlength(10),
+	whenCreated Long required,
+	whenSentFirst Long,
+	whenSentLast Long,
+	sendCount Integer,
+	whenSendDone Long,
+	priority Integer,
+	recipient String required maxlength(255),
+	error String maxlength(255),
+	ownerId Long required
+}
+
+entity QueuedIncoming {
+	id Long required,
+	status Integer
+}
+
+
+entity ReceivedMessage {
+	id Long required,
+	version Long required,
+	macString String required maxlength(255),
+	payload TextBlob required,
+	whenReceived Long required,
+	whenSent Long required
+}
+
+entity ReceivedRecord {
+	id Long required,
+	version Long required,
+	firmwareVersionId Long required,
+	receivedMessageId Long required,
+	receivedMessageIndex Integer required,
+	payload TextBlob required,
+	payloadType Integer required,
+	whenReceived Long required,
+	whenSent Long required
+}
+
+entity ReeferData {
+	id Long required,
+	/** Parent record id, meaning depends on reefer_interface */
+	parentId Long required,
+	/** Which table (rte/ibox/carrier) parent is in */
+	reeferInterface ReeferInterface required,
+	/** Reefer controller class (from asset tags) */
+	reeferClass ReeferClass,
+	/** Payload type in parent */
+	payloadParentType Integer required,
+	/** Reefer data in JSON format */
+	payload TextBlob required,
+	/** When GTCM recorded data */
+	whenRecorded Long required,
+	/** When server received data from GTCM */
+	whenReceived Long required
+}
+
+entity RteAlarm {
+	rid Long required,
+	type String required maxlength(16),
+	id Integer required,
+	level Integer,
+	levelName String maxlength(32),
+	name String maxlength(32),
+	description String required maxlength(255)
+}
+
+entity RteAlarmSeverity {
+
+}
+
+entity UnitBaseRecord {
+	id Long required,
+	version Long required,
+	boardTemperature Integer required,
+	firmwareVersionId Long required,
+	gpsAltitude BigDecimal,
+	gpsHeading BigDecimal,
+	gpsLatitude BigDecimal required,
+	gpsLongitude BigDecimal required,
+	gpsSpeed BigDecimal,
+	gpsTime Long required,
+	zoneId String maxlength(10),
+	whenReceived Long required,
+	whenSent Long required,
+	powerVoltage BigDecimal,
+	xAcceleration BigDecimal,
+	xPeakAcceleration BigDecimal,
+	yAcceleration BigDecimal,
+	yPeakAcceleration BigDecimal,
+	zAcceleration BigDecimal,
+	zPeakAcceleration BigDecimal,
+	gpsSatsSeen Integer,
+	gpsSatsUsed Integer,
+	gpsFixStatus Integer,
+	gpsPdopQuality BigDecimal,
+	gpsHdopQuality BigDecimal,
+	gpsVdopQuality BigDecimal
+}
+
+
+// Enums
+enum PrerequisiteType {
+	SENT, RESULT, SUCCESS
+}
+
+/** Which table (rte/ibox/carrier) parent is in */
+enum ReeferInterface {
+	GTMAR, TKTT, CRTT
+}
+
+/** Reefer controller class (from asset tags) */
+enum ReeferClass {
+	CR, CR0, CRTT, DK, MH, SC, LD, TK, TKTT
+}
+
+
+// Relations
+relationship ManyToOne {
+	Alert{event required} to Event{alert}
+}
+
+relationship ManyToOne {
+	Alert{owner required} to Customer{alert}
+}
+
+relationship OneToOne {
+	Asset{box} to Box{asset}
+}
+
+relationship ManyToOne {
+	Asset{owner required} to Customer{asset}
+}
+
+relationship ManyToOne {
+	AssetCustomerTag{asset required} to Asset{assetCustomerTag}
+}
+
+relationship ManyToOne {
+	AssetCustomerTag{assetCustomerTagType required} to AssetCustomerTagType{assetCustomerTag}
+}
+
+relationship ManyToOne {
+	AssetCustomerTagLabel{assetCustomerTagType required} to AssetCustomerTagType{assetCustomerTagLabel}
+}
+
+relationship ManyToOne {
+	AssetCustomerTagType{owner required} to Customer{assetCustomerTagType}
+}
+
+relationship ManyToOne {
+	Box{firmwareVersion required} to FirmwareVersion{box}
+}
+
+relationship ManyToOne {
+	Box{owner required} to Customer{box}
+}
+
+relationship ManyToOne {
+	Command{commandType required} to CommandType{command}
+}
+
+relationship ManyToOne {
+	Command{box required} to Box{command}
+}
+
+relationship ManyToOne {
+	Command{asset} to Asset{command}
+}
+
+relationship ManyToOne {
+	Command{owner required} to Customer{command}
+}
+
+relationship ManyToOne {
+	/** Do not send until prerequisite command reached prerequisite_type state */
+	Command{prerequisite} to Command{command}
+}
+
+relationship OneToOne {
+	Command{commandReply} to CommandReply{command}
+}
+
+relationship ManyToOne {
+	/** Optional parent with viewing rights */
+	Customer{parent} to Customer{customer}
+}
+
+relationship ManyToOne {
+	Event{owner required} to Customer{event}
+}
+
+// TODO This is a pure ManyToMany relation (delete me and decide owner side)
+relationship ManyToMany {
+	FirmwareVersionAllowedCommandType{firmwareVersionCommandTypes} to FirmwareVersion{firmwareVersionAllowedCommandType}
+}
+// TODO This is a pure ManyToMany relation (delete me and decide owner side)
+relationship ManyToMany {
+	FirmwareVersionAllowedCommandType{commandType required} to CommandType{firmwareVersionAllowedCommandType}
+}
+
+// TODO This is a pure ManyToMany relation (delete me and decide owner side)
+relationship ManyToMany {
+	FirmwareVersionGen1fullCommandType{firmwareVersionFullConfiguration} to FirmwareVersion{firmwareVersionGen1fullCommandType}
+}
+// TODO This is a pure ManyToMany relation (delete me and decide owner side)
+relationship ManyToMany {
+	FirmwareVersionGen1fullCommandType{commandType required} to CommandType{firmwareVersionGen1fullCommandType}
+}
+
+relationship ManyToOne {
+	GtcmHome{box required} to Box{gtcmHome}
+}
+
+relationship ManyToOne {
+	/** The Boxer server this GTCM should talk to */
+	GtcmHome{gtServer required} to GtServer{gtcmHome}
+}
+
+relationship ManyToOne {
+	LatestLocation{box required} to Box{latestLocation}
+}
+
+relationship ManyToOne {
+	LatestLocation{location required} to UnitBaseRecord{latestLocation}
+}
+
+relationship ManyToOne {
+	LatestLocation{realLocation} to UnitBaseRecord{latestLocation}
+}
+
+relationship ManyToOne {
+	NotificationRecipient{notification required} to Notification{notificationRecipient}
+}
+
+relationship ManyToOne {
+	QueuedIncoming{receivedMessage required} to ReceivedMessage{queuedIncoming}
+}
+
+relationship ManyToOne {
+	ReceivedMessage{asset} to Asset{receivedMessage}
+}
+
+relationship ManyToOne {
+	ReceivedMessage{box required} to Box{receivedMessage}
+}
+
+relationship ManyToOne {
+	ReceivedMessage{firmwareVersion required} to FirmwareVersion{receivedMessage}
+}
+
+relationship ManyToOne {
+	ReceivedMessage{owner required} to Customer{receivedMessage}
+}
+
+relationship ManyToOne {
+	ReceivedRecord{asset} to Asset{receivedRecord}
+}
+
+relationship ManyToOne {
+	ReceivedRecord{box required} to Box{receivedRecord}
+}
+
+relationship ManyToOne {
+	ReceivedRecord{owner required} to Customer{receivedRecord}
+}
+
+relationship ManyToOne {
+	ReeferData{asset} to Asset{reeferData}
+}
+
+relationship ManyToOne {
+	ReeferData{box required} to Box{reeferData}
+}
+
+relationship ManyToOne {
+	/** Effective owner (asset then box) */
+	ReeferData{owner required} to Customer{reeferData}
+}
+
+relationship ManyToOne {
+	RteAlarmSeverity{rteAlarmRid required} to RteAlarm{rteAlarmSeverity}
+}
+
+relationship ManyToOne {
+	RteAlarmSeverity{owner required} to Customer{rteAlarmSeverity}
+}
+
+relationship ManyToOne {
+	RteAlarmSeverity{eventType required} to EventType{rteAlarmSeverity}
+}
+
+relationship ManyToOne {
+	UnitBaseRecord{asset} to Asset{unitBaseRecord}
+}
+
+relationship ManyToOne {
+	UnitBaseRecord{box required} to Box{unitBaseRecord}
+}
+
+relationship ManyToOne {
+	UnitBaseRecord{owner required} to Customer{unitBaseRecord}
+}
+
+
+// Options
+service * with serviceClass
+paginate * with infinite-scroll
+dto * with mapstruct
+filter *
+
